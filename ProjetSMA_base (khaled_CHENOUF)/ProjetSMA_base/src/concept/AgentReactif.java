@@ -1,0 +1,61 @@
+package concept;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import sma.Agent;
+
+public class AgentReactif extends Agent {
+
+	HashMap<Direction, Zone> informations = new HashMap<Direction, Zone>();
+
+	public AgentReactif(VehicleInterface vehicle, int id) {
+		super(vehicle, id);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void run() {
+		while (!Thread.currentThread().isInterrupted()) {
+
+			List<Direction> directions = new ArrayList<Direction>();
+			informations = percevoirZones();
+			for (Direction direction : this.informations.keySet()) {
+				Zone zonecourante = informations.get(direction);
+				// condition 1
+				if (undiscovered().contains(direction) && zonecourante.isBordure())
+					directions.add(direction.opposite());
+				// condition 2
+				if (undiscovered().contains(direction) && !zonecourante.isBordure())
+					directions.add(direction);
+				// condition 3
+				if (undiscovered().contains(direction) && otherVehicules().contains(direction))
+					directions.add(direction.next());
+				// condition 4
+				if (undiscovered().contains(direction) && !otherVehicules().contains(direction))
+					directions.add(direction);
+			}
+
+			if (directions.isEmpty()) {
+				move(Direction.getRandom());
+
+			} else {
+				Direction direction = directions.get(((int) (Math.random() * directions.size())));
+				if (obstacles().contains(direction))
+					move(direction.next());
+				else
+					move(direction);
+			}
+
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+}

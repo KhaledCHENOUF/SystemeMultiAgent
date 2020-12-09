@@ -1,0 +1,56 @@
+package concept;
+
+import java.util.HashMap;
+import java.util.Observer;
+
+import params.Params;
+
+public class Exploration {
+	private final Terrain terrain;
+
+	public Exploration(Observer obs) {
+		this.terrain=new Terrain(obs);
+	}
+
+	/**
+	 *
+	 * @return une Map avec les identifiants des Véhicules comme clés,
+	 * et les Véhicules en objets
+	 */
+	public HashMap<Integer, VehicleInterface> getVehicleController(){
+		HashMap<Integer, VehicleInterface> vehicles=new HashMap<>();
+		for(int i=0;i<Params.VEHICULE_NBR;i++){
+			vehicles.put(i, terrain.vehicle(i));
+		}
+
+		return vehicles;
+	}
+
+	public Terrain getTerrain(){
+		return terrain;
+	}
+
+
+	/**
+	 * Créer et lancer dans cette méthode les agents
+	 */
+	public void ready(){
+		HashMap<Integer, VehicleInterface> vehicles=getVehicleController();
+		int identifiant = 1;
+		for (Integer key : vehicles.keySet()) {
+			//Lancement agent reactif
+			//AgentReactif Agent = new AgentReactif (vehicles.get(key),identifiant);
+			//Lancement agent cognitif
+			//AgentCognitif Agent = new AgentCognitif (vehicles.get(key),identifiant);
+			//Lancement agent auto-organis�
+			AutoOrganisation Agent = new AutoOrganisation (vehicles.get(key),identifiant);
+			Agent.start();
+			identifiant++;
+		}
+		
+
+	}
+
+
+
+}

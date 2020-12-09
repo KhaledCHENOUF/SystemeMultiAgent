@@ -1,0 +1,43 @@
+package concept;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import sma.Agent;
+
+public class AutoOrganisation extends Agent {
+
+	HashMap<Direction, Zone> informations = new HashMap<Direction, Zone>();
+
+	public AutoOrganisation(VehicleInterface vehicle, int id) {
+		super(vehicle, id);
+		// TODO Auto-generated constructor stub
+	}
+	public void run() {
+		while (!Thread.currentThread().isInterrupted()) {
+			informations = percevoirZones();
+			
+			Direction dir = Direction.Ouest;
+			
+			for (Direction direction : this.informations.keySet()) {
+				Zone zonecourante = informations.get(direction);
+				if (undiscovered().contains(direction)) {
+					if (zonecourante.isBordure() || otherVehicules().contains(direction))
+						dir = direction.opposite();
+					if (!zonecourante.isBordure() || !otherVehicules().contains(direction))
+						dir = direction;
+				}
+			}
+			move(dir);
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+}
